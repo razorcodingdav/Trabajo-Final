@@ -1,0 +1,235 @@
+---
+```{r}
+#Variable Dependiente
+link="https://en.wikipedia.org/wiki/Democracy_Index"
+path='//*[@id="mw-content-text"]/div/table[2]'
+```
+```{r}
+demo=htmltab(doc = link, 
+              which = path, 
+              encoding = "UTF-8")
+View(demo)
+```
+```{r}
+names(demo)=str_split(names(demo),">>",simplify = T)[,2]%>%gsub('\\s','',.)
+names(demo)
+
+demo=demo[,c(2,3,9,10)] 
+
+demo$Score=as.numeric(demo$Score) 
+
+demo[,]=lapply(demo[,], trimws,whitespace = "[\\h\\v]") 
+
+names(demo)[names(demo)=="Score"]="Demo"
+```
+
+
+
+```{r}
+#Variables independientes modelo 1
+#PPP
+library(readxl)
+gdppercap <- read_excel("Limpio per capita gaaaaaaaa.xls", 
+    sheet = "Data")
+View(gdppercap)
+gdppercap=gdppercap[,-c(3)]
+gdppercap=na.omit(gdppercap)
+names(gdppercap)=c("Country","PPP2018")
+gdppercap$PPP2018=as.numeric(gdppercap$PPP2018) 
+
+```
+
+```{r}
+library(readr)
+innova <- read_csv("Analysis_2020jul.31084039.csv")
+View(innova)
+innova=innova[,c(2,6)]
+names(innova)=c("Country","InovaScore")
+ 
+```
+
+
+
+```{r}
+#Variable Independiente modelo 2
+library(readxl)
+Literacy <- read_excel("Literacy.xls")
+View(Literacy)
+
+names(Literacy)=c("Country","Literacy")
+
+```
+
+```{r}
+library(readxl)
+matehmatic <- read_excel("matehmatic.xls")
+View(matehmatic)
+
+names(matehmatic)=c("Country","Math")
+```
+
+```{r}
+library(readxl)
+Science <- read_excel("Science.xls")
+View(Science)
+names(Science)=c("Country","Science")
+```
+```{r}
+
+```
+
+```{r}
+link="https://en.wikipedia.org/wiki/World_Happiness_Report"
+path='//*[@id="mw-content-text"]/div/table'
+happy=htmltab(doc = link, 
+              which = path, 
+              encoding = "UTF-8")
+
+View(happy)
+str(happy)
+```
+```{r}
+happy=happy[,c(2:4)]
+```
+
+
+```{r}
+names(happy)[names(happy)=="Country or region"]="Country" 
+names(happy)[names(happy)=="Score"]="happy"
+```
+
+```{r}
+library(readxl)
+idh <- read_excel("2018_Statistical_Annex_Table_1 (1).xlsx")
+View(idh)
+```
+```{r}
+str(idh)
+```
+
+```{r}
+```{r}
+idh1 = idh[c(6:204), ]
+```
+```{r}
+idh1[,c(1,4,6,8,10,12,13,14,15)] = NULL 
+```
+```{r}
+names(idh1) = c("country","IDH","lifexpec","ExpectSchooling","meanschooling","GNipercapita")
+```
+```{r}
+idh1=idh1[,c(1,2,6)]
+```
+```{r}
+idh1=idh1[-c(193:199),]
+
+
+#GNI va a Modelo 1
+GNI = idh1[,-c(2)]
+```{r}
+
+```{r}
+```{r}
+
+```
+
+```
+
+```
+
+```
+```{r}
+idh1=idh1[-c(60,114,154,193),]
+```
+```{r}
+idh[23,1]="South Korea"
+idh[27,1]="Czech Republic"
+idh[78,1]="Venezuela"
+idh[82,1]="Macedonia"
+idh[49,1]="Russia"
+idh[60,1]="Iran"
+idh[118,1]="Bolivia"
+idh[176,1]="Dem.Rep.Congo"
+idh[7,1]="Hong Kong"
+
+```
+```
+```{r}
+idh1[,-c(1)]=lapply(idh1[,-c(1)],as.numeric)
+idh1[,]=lapply(idh1[,], trimws,whitespace = "[\\h\\v]") 
+```
+```{r}
+names(idh1)[names(idh1)=="country"]="Country" 
+```
+
+```{r}
+idh = idh1[-c(60,114,154,193), ]
+```
+
+
+```{r}
+#Limpieza de Espacios
+demos[,]=lapply(demos[,], trimws,whitespace = "[\\h\\v]") 
+gdppercap[,]=lapply(gdppercap[,], trimws,whitespace = "[\\h\\v]") 
+innova[,]=lapply(innova[,], trimws,whitespace = "[\\h\\v]")
+#2
+Literacy[,]=lapply(Literacy[,], trimws,whitespace = "[\\h\\v]")
+matehmatic[,]=lapply(matehmatic[,], trimws,whitespace = "[\\h\\v]")
+Science[,]=lapply(Science[,], trimws,whitespace = "[\\h\\v]")
+#3
+happy[,]=lapply(happy[,], trimws,whitespace = "[\\h\\v]")
+idh1[,]=lapply(idh1[,], trimws,whitespace = "[\\h\\v]")
+```
+
+```{r}
+#modelo 1
+View(demo)
+VIew(GNI)
+View(gdppercap)
+View(innova)
+gdppercap[179,1]="Russia"
+innova[46,1]="Russia"
+gdppercap[111,1]="South Korea"
+innova[12,1]="South Korea"
+innova[45,1]="Vietnam"
+GNI[49,1]="Russia"
+GNI[82,1]="North Macedonia"
+total1=merge(demo,gdppercap,by.x='Country', by.y='Country')
+totalgni=merge(total1,GNI, by.x='Country', by.y='Country')
+modelo1=merge(totalgni,innova,by.x='Country', by.y='Country')
+modelo1=modelo1[,c(1,2,5:7)]
+modelo3[,-c(1,3,5)]=lapply(modelo3[,-c(1,3,5)],as.numeric)
+
+
+```
+
+```{r}
+#modelo 2
+View(demo)
+View(Literacy)
+View(matehmatic)
+View(Science)
+Literacy[1,1]="Singapore"
+Science[1,1]="Singapore"
+Science[11,1]="South Korea"
+total2=merge(demo,Literacy,by.x='Country', by.y='Country') 
+total3=merge(total2,matehmatic,by.x='Country', by.y='Country')
+modelo2=merge(total3,Science,by.x='Country', by.y='Country')
+modelo2[,-c(1,3,4)]=lapply(modelo2[,-c(1,3,4)],as.numeric)
+
+```
+
+```{r}
+#Modelo 3
+View(happy)
+View(idh1)
+total4=merge(demo,happy,by.x='Country', by.y='Country') 
+modelo3=merge(total4,idh1,by.x='Country', by.y='Country') 
+modelo3[,-c(1,3,4)]=lapply(modelo3[,-c(1,3,4)],as.numeric)
+modelo3=modelo3[,-c(3,4,6,8)]
+
+
+
+
+```
+
